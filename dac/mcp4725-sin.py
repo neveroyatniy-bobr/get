@@ -1,4 +1,4 @@
-from r2r_dac import R2R_DAC
+from mcp4725 import MCP4725
 import numpy as np
 import time
 
@@ -8,21 +8,20 @@ def get_sin_wave_amplitude(freq, t):
 def wait_for_sampling_period(sampling_freq):
     time.sleep(1/sampling_freq)
 
-bits = [16, 20, 21, 25, 26, 17, 27, 22]
-dynamic_range = 3.3
+dynamic_range = 5
 freq = 10
-sampling_freq = 1000
+sampling_freq = 60
 amplitude = 3.2
 
 if __name__ == "__main__":
     try:
-        dac = R2R_DAC(bits, dynamic_range)
+        dac = MCP4725(dynamic_range, verbose=False)
 
         while True:
             try:
                 dac.set_voltage(amplitude * get_sin_wave_amplitude(freq, time.time()))
-            except ValueError:
-                print("Вы ввели не число. Попробуйте снова")
+            except Exception:
+                pass
     except KeyboardInterrupt:
         print("До свидания!")
     finally:

@@ -19,7 +19,7 @@ def number_to_dac(num):
 
 GPIO.setmode(GPIO.BCM)
 
-bits = [22, 27, 17, 26, 25, 21, 20, 16][::-1]
+bits = [16, 20, 21, 25, 26, 17, 27, 22]
 
 GPIO.setup(bits, GPIO.OUT)
 

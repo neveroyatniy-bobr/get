@@ -2,7 +2,7 @@ from RPi import GPIO
 
 class R2R_DAC:
     def __init__(self, bits, dynamic_range):
-        self.bits = bits[::-1]
+        self.bits = bits
         self.dynamic_range = dynamic_range
 
         GPIO.setmode(GPIO.BCM)
@@ -30,7 +30,7 @@ class R2R_DAC:
         GPIO.output(self.bits, 0)
         GPIO.cleanup()
 
-bits = [22, 27, 17, 26, 25, 21, 20, 16]
+bits = [16, 20, 21, 25, 26, 17, 27, 22]
 dynamic_range = 3.3
 
 if __name__ == "__main__":
