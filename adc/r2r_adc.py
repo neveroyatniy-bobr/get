@@ -31,21 +31,46 @@ class R2R_ADC:
             self.number_to_dac(num)
             time.sleep(self.compare_time)
 
-            is_above = GPIO.input(self.comp_gpio)
-            if is_above:
+            is_dac_above = GPIO.input(self.comp_gpio)
+            if is_dac_above:
                 return num
         
         return 255
     
     def get_sc_voltage(self):
         return self.sequal_counting_adc() / 255 * self.dynamic_range
+    
+    def successive_approximation_adc(self):
+        left = 0
+        right = 255
+        mid = (left + right) // 2
+        while right - left > 1:
+            self.number_to_dac(mid)
+            time.sleep(self.compare_time)
+
+            is_dac_above = GPIO.input(self.comp_gpio)
+            if is_dac_above:
+                right = mid
+            else:
+                left = mid
+            mid = (left + right) // 2
+        
+        return right
+    
+    def get_sar_voltage(self):
+        return self.successive_approximation_adc() / 255 * self.dynamic_range
+
+is_sar = True
 
 if __name__ == "__main__":
     try:
         adc = R2R_ADC(3.3)
 
         while True:
-            print(f"Напряжение на аналоговом входе: {adc.get_sc_voltage()} В")
+            if is_sar:
+                print(f"Напряжение на аналоговом входе: {adc.get_sar_voltage()} В")
+            else:
+                print(f"Напряжение на аналоговом входе: {adc.get_sc_voltage()} В")
 
     except KeyboardInterrupt:
         print("")
